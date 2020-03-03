@@ -1,0 +1,3 @@
+# - import_playbook: ./playbooks/echo.yml
+# - import_playbook: ./playbooks/install-docker.yml
+- import_playbook: ./playbooks/install-minio.yml

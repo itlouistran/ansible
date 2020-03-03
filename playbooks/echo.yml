@@ -1,0 +1,14 @@
+- name: Print Hello world
+  hosts: vpn-server
+  vars:
+    data: Hello world
+  tasks:
+    - name: Echo data
+      debug:
+        msg: "{{ansible_lsb}}"
+      with_items: [1, 2, 3, 4, 5]
+      when: "ansible_os_family == 'Debian'"
+    # - name: Copy file
+    #   copy:
+    #     src: ~/workspace/test.rb
+    #     dest: ~/
