@@ -1,0 +1,4 @@
+MINIO_VOLUMES="/usr/local/share/minio/"
+MINIO_OPTS="-C {{ conf_path }}conf.d --address 0.0.0.0:9000"
+MINIO_ACCESS_KEY={{ access_key }}
+MINIO_SECRET_KEY={{ secret_key }}

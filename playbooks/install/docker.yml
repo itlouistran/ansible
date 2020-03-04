@@ -6,7 +6,7 @@
       apt:
         force_apt_get: yes
         update_cache: yes
-    - name: Install prerequisite package
+    - name: Install prerequisite packages
       package:
         name: "{{ item }}"
         state: latest
@@ -33,4 +33,10 @@
         - docker-ce
         - docker-ce-cli
         - containerd.io
-    
+      notify:
+        - Start docker
+  handlers:
+    - name: Start docker
+      service:
+        name: docker
+        state: started

@@ -1,0 +1,38 @@
+- name: Install nginx 
+  hosts: setup-server
+  become: true
+  vars:
+    nginx_default_conf: /etc/nginx/conf.d/default.conf
+  tasks:
+    - name: Add Nginx GPG key
+      apt_key:
+        id: ABF5BD827BD9BF62
+        keyserver: keyserver.ubuntu.com
+        state: present
+    - name: Add binary package Nginx apt repository
+      apt_repository:
+        repo: deb https://nginx.org/packages/ubuntu/ {{ ansible_lsb.codename }} nginx
+        update_cache: true
+    - name: Add source package Nginx apt repository
+      apt_repository:
+        repo: deb-src https://nginx.org/packages/ubuntu/ {{ ansible_lsb.codename }} nginx
+        update_cache: true
+    - name: Install the latest version of Nginx
+      package:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - nginx
+      notify:
+        - Restart Nginx
+    - name: Remove default conf
+      file:
+        path: "{{ nginx_default_conf }}"
+        state: absent
+      notify:
+        - Restart Nginx
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
