@@ -1,0 +1,12 @@
+- name: Setup jenkins with docker
+  hosts: setup-server
+  tasks:
+    - name: Start jenkins
+      docker_container:
+        name: jenkins
+        image: jenkins
+        restart: yes
+        state: present
+        exposed_ports:
+          - 8080
+          - 50000

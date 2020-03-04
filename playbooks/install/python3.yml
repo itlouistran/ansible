@@ -1,0 +1,13 @@
+- name: Install Python3
+  hosts: setup-server
+  become: true
+  tasks:
+    - name: Update apt
+      apt:
+        update_cache: yes
+    - name: install Python3
+      package:
+        name:
+          - python3
+          - python-pip
+        state: latest

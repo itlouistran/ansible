@@ -33,6 +33,12 @@
         state: latest
       notify:
         - Start docker
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups:
+          - "{{ ansible_user }}"
+          - docker
   handlers:
     - name: Start docker
       service:

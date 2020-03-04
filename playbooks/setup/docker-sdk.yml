@@ -1,0 +1,7 @@
+- name: Setup docker SDK
+  hosts: setup-server
+  tasks:
+    - name: Setup docker SDK
+      pip:
+        name: docker
+        state: present
