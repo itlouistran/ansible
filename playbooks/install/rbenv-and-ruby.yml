@@ -1,0 +1,43 @@
+- name: Install rbenv and ruby
+  hosts: setup-server
+  tasks:
+    - name: Update apt
+      apt:
+        update_cache: yes
+      become: yes
+    - name: Install prerequisite package
+      package:
+        name: "{{ item }}"
+        state: latest
+      become: yes
+      with_items:
+        - git-core
+        - zlib1g-dev
+        - build-essential
+        - libssl-dev
+        - libssl1.0-dev
+        - libreadline-dev
+        - libyaml-dev
+        - libxml2-dev
+        - libxslt1-dev
+        - libcurl4-openssl-dev
+        - software-properties-common
+        - libffi-dev
+    - name: Install rbenv
+      git:
+        clone: yes 
+        repo: https://github.com/rbenv/rbenv.git
+        dest: ~/.rbenv
+    - name: Install ruby-build
+      git:
+        clone: yes 
+        repo: https://github.com/rbenv/ruby-build.git
+        dest: ~/.rbenv/plugins/ruby-build
+    - name: Add auto load rbenv
+      blockinfile:
+        block: |
+          export PATH="$HOME/.rbenv/bin:$PATH"
+          eval "$(rbenv init -)"
+          export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
+        path: ~/.bashrc
+        marker: "# {mark} ANSIBLE MANAGED BLOCK rbenv & ruby"
