@@ -6,7 +6,7 @@
         name: jenkins
         image: jenkins
         restart: yes
-        state: present
-        exposed_ports:
-          - 8080
-          - 50000
+        state: started
+        published_ports:
+          - "8080:8080"
+          - "50000:5000"
