@@ -1,4 +1,4 @@
-- import_playbook: ../playbooks/install/python3.yml
-- import_playbook: ../playbooks/install/docker.yml
+- import_playbook: ../playbooks/setup/python3.yml
+- import_playbook: ../playbooks/setup/docker.yml
 - import_playbook: ../playbooks/setup/docker-sdk.yml
 - import_playbook: ../playbooks/setup/docker-jenkins.yml
