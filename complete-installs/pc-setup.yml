@@ -1,4 +1,3 @@
 - import_playbook: ../playbooks/setup/rbenv-and-ruby.yml
 - import_playbook: ../playbooks/setup/docker.yml
-- import_playbook: ../playbooks/setup/chrome.yml
 - import_playbook: ../playbooks/setup/vscode.yml
