@@ -29,6 +29,12 @@
         dest: "{{ conf_path }}"
       notify:
         - Restart Mosquitto
+    - ufw:
+        rule: allow
+        port: '{{ item }}'
+      with_items:
+        - '1883'
+        - '8083'
   handlers:
     - name: Restart Mosquitto
       service:
