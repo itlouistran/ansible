@@ -2,15 +2,12 @@ Vagrant.configure("2") do |config|
   config.vm.define "crc", primary: true do |crc|
     crc.vm.box = "ubuntu/bionic64"
     crc.vm.network "forwarded_port", guest: 22, host: 2222
+    crc.vm.provider "virtualbox" do |vb|
+      vb.memory = "10240"
+    end
   end
 
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
+
   #
   # View the documentation for the provider you are using for more
   # information on available options.
