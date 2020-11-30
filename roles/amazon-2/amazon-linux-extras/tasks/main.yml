@@ -1,0 +1,9 @@
+---
+- name: Update
+  yum:
+    update_cache: yes
+- name: Install amazon-linux-extras
+  package:
+    name: 
+      - amazon-linux-extras
+    state: latest

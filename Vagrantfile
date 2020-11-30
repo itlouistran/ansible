@@ -1,10 +1,49 @@
 Vagrant.configure("2") do |config|
-  config.vm.define "crc", primary: true do |crc|
-    crc.vm.box = "ubuntu/bionic64"
-    crc.vm.network "forwarded_port", guest: 22, host: 2222
-    crc.vm.provider "virtualbox" do |vb|
-      vb.memory = "10240"
-    end
+  config.vm.define "swarm_manager", primary: true do |host|
+    host.vm.box = "ubuntu/bionic64"
+    host.vm.network "forwarded_port", guest: 22, host: 2222, auto_correct: true
+    host.vm.network "forwarded_port", guest: 2377, host: 2377, auto_correct: true
+    host.vm.network "forwarded_port", guest: 7946, host: 7946, auto_correct: true
+    host.vm.network "forwarded_port", guest: 4789, host: 4789, protocol: :udp, auto_correct: true
+
+    # crc.vm.provider "virtualbox" do |vb|
+    #   vb.memory = "1024"
+    # end
+    # config.vm.provision "shell", inline: <<-SHELL
+    #   apt-get update
+    #   apt-get install -y apache2
+    # SHELL
+  end
+
+  config.vm.define "swarm_worker_1", primary: true do |host|
+    host.vm.box = "ubuntu/bionic64"
+    host.vm.network "forwarded_port", guest: 22, host: 2222, auto_correct: true
+    host.vm.network "forwarded_port", guest: 2377, host: 2377, auto_correct: true
+    host.vm.network "forwarded_port", guest: 7946, host: 7946, auto_correct: true
+    host.vm.network "forwarded_port", guest: 4789, host: 4789, protocol: :udp, auto_correct: true
+    
+    # crc.vm.provider "virtualbox" do |vb|
+    #   vb.memory = "1024"
+    # end
+    # config.vm.provision "shell", inline: <<-SHELL
+    #   apt-get update
+    #   apt-get install -y apache2
+    # SHELL
+  end
+  config.vm.define "swarm_worker_2", primary: true do |host|
+    host.vm.box = "ubuntu/bionic64"
+    host.vm.network "forwarded_port", guest: 22, host: 2222, auto_correct: true
+    host.vm.network "forwarded_port", guest: 2377, host: 2377, auto_correct: true
+    host.vm.network "forwarded_port", guest: 7946, host: 7946, auto_correct: true
+    host.vm.network "forwarded_port", guest: 4789, host: 4789, protocol: :udp, auto_correct: true
+    
+    # crc.vm.provider "virtualbox" do |vb|
+    #   vb.memory = "1024"
+    # end
+    # config.vm.provision "shell", inline: <<-SHELL
+    #   apt-get update
+    #   apt-get install -y apache2
+    # SHELL
   end
 
 

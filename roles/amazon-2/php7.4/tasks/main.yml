@@ -1,12 +1,4 @@
 ---
-- name: Update
-  yum:
-    update_cache: yes
-- name: Install the epel & remi repo
-  package:
-    name: 
-      - amazon-linux-extras
-    state: latest
 - name: Enable amazon-linux-extras php7.4
   shell: "amazon-linux-extras enable php7.4"
 

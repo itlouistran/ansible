@@ -1,0 +1,5 @@
+- hosts: swarm
+  become: true
+  roles:
+    - amazon-2/docker
+    - amazon-2/amazon-linux-extras
