@@ -1,0 +1,29 @@
+---
+- name: Update
+  apt:
+    force_apt_get: yes
+    update_cache: yes
+- name: install nodejs prerequisites
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - apt-transport-https
+    - gcc
+    - g++
+    - make
+- name: add nodejs apt key
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state: present
+- name: add nodejs repository
+  apt_repository:
+    repo: deb https://deb.nodesource.com/node_12.x {{ ansible_lsb.codename }} main
+    state: present
+    update_cache: yes
+- name: install nodejs
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - nodejs

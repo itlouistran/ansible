@@ -1,0 +1,70 @@
+---
+- name: Update
+  apt:
+    force_apt_get: yes
+    update_cache: yes
+- name: Add Nginx GPG key
+  apt_key:
+    id: ABF5BD827BD9BF62
+    keyserver: keyserver.ubuntu.com
+    state: present
+- name: Add binary package Nginx apt repository
+  apt_repository:
+    repo: deb https://nginx.org/packages/ubuntu/ {{ ansible_lsb.codename }} nginx
+    update_cache: true
+- name: Add source package Nginx apt repository
+  apt_repository:
+    repo: deb-src https://nginx.org/packages/ubuntu/ {{ ansible_lsb.codename }} nginx
+    update_cache: true
+- name: Install the latest version of Nginx
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - nginx
+- name: Remove default conf
+  file:
+    path: "{{ nginx_default_conf }}"
+    state: absent
+
+- name: Update nginx user
+  lineinfile:
+    dest: /etc/nginx/nginx.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^user ', line: 'user {{ nginx_user }};' }
+    - { regexp: '^worker_processes ', line: 'worker_processes 2;' }
+  notify:
+    - Restart Nginx
+
+- name: install password tool & config basic auth
+  block:
+    - name: install pip & password tool
+      package:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - python-pip
+        - apache2-utils # password file creation tool for basic auth
+        # - pkg_resources
+
+    - name: Install passlib python package
+      pip:
+        name: passlib
+
+    - name: Nginx basic auth password
+      htpasswd:
+        path: /etc/apache2/.htpasswd
+        name: "{{ basic_auth_user }}"
+        password: "{{ basic_auth_pass }}"
+      notify:
+        - Restart Nginx
+  when: basic_auth_user is defined
+
+- name: Add app server config
+  template:
+    src: "{{ nginx_conf_src_path }}"
+    dest: /etc/nginx/conf.d/app.conf
+  notify:
+    - Restart Nginx

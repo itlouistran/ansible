@@ -1,0 +1,5 @@
+mysql_port: 3306
+mysql_root_password: root
+
+# nginx default conf
+nginx_default_conf: /etc/nginx/conf.d/default.conf

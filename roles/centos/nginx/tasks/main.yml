@@ -1,0 +1,63 @@
+---
+- name: Install the epel repo
+  package:
+    name: 
+      - epel-release
+    state: latest
+- name: Install the latest version of Nginx
+  package:
+    name: 
+      - nginx
+    state: latest
+
+- name: Start Nginx
+  service: 
+    name: nginx
+    state: started
+  become: yes
+
+- name: Update nginx user
+  lineinfile:
+    dest: /etc/nginx/nginx.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^user ', line: 'user {{ nginx_user }};' }
+    - { regexp: '^worker_processes ', line: 'worker_processes {{ nginx_worker | default(2) }};' }
+
+- name: install password tool & config basic auth
+  block:
+    - name: install pip & password tool
+      package:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - python3-pip
+        - apache2-utils # password file creation tool for basic auth
+
+    - name: Install passlib python package
+      pip:
+        name: passlib
+
+    - name: Nginx basic auth password
+      htpasswd:
+        path: /etc/apache2/.htpasswd
+        name: "{{ basic_auth_user }}"
+        password: "{{ basic_auth_pass }}"
+      notify:
+        - Restart Nginx
+  when: basic_auth_user is defined
+
+- name: Update nginx public site conf
+  block:
+    - name: Remove default conf
+      file:
+        path: "{{ nginx_default_conf }}"
+        state: absent
+    - name: Add app server config
+      template:
+        src: "{{ nginx_conf_src_path }}"
+        dest: /etc/nginx/conf.d/app.conf
+      notify:
+        - Restart Nginx
+  when: nginx_conf_src_path is defined

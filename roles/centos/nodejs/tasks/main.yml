@@ -1,0 +1,27 @@
+---
+- name: Update
+  yum:
+    update_cache: yes
+- name: install nodejs prerequisites
+  package:
+    name: 
+      - gcc-c++
+      - make
+    state: latest
+- name: Node.js - Get script
+  get_url:
+    url: "https://rpm.nodesource.com/setup_12.x"
+    dest: "./nodejs.sh"
+- name: Node.js - Set execution permission to script
+  file:
+    path: "./nodejs.sh"
+    mode: "u+x"
+- name: Node.js - Execute installation script
+  shell: "./nodejs.sh"
+
+- name: install nodejs
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - nodejs

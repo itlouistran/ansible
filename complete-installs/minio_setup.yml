@@ -1,4 +1,0 @@
-- import_playbook: ../playbooks/setup/nginx-standalone.yml
-# - import_playbook: ./playbooks/fail2ban.yml
-# - import_playbook: ../playbooks/docker.yml
-- import_playbook: ../playbooks/setup/minio.yml

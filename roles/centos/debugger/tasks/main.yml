@@ -1,0 +1,4 @@
+---
+- name: Server information
+  debug:
+    msg: Server {{ ansible_host }} - {{ ansible_distribution }} - {{ ansible_distribution_version }}

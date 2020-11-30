@@ -1,0 +1,15 @@
+---
+- name: Install prerequire
+  package:
+    name: curl
+    state: present
+  become: true
+
+- name: Download composer installer
+  get_url:
+    url: https://getcomposer.org/installer
+    dest: "/tmp/composer-setup.php"
+  register: composer_install
+
+- name: Install composer
+  shell: "php {{ composer_install.dest }} --install-dir=/usr/local/bin --filename=composer"

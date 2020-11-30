@@ -1,0 +1,12 @@
+- hosts: ansible_servers
+  become: true
+  roles:
+    - amazon-2/debugger
+    - amazon-2/php7.4
+    - amazon-2/nodejs
+    - role: amazon-2/nginx
+      vars:
+        # nginx_conf_src_path: /Users/vantran/workspace/setup-servers/templates/esim/default.conf
+        # basic_auth_user: gumi
+        # basic_auth_pass: ahihidongox
+        nginx_user: "{{ ansible_user }}"

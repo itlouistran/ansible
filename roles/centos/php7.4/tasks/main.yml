@@ -1,0 +1,62 @@
+---
+- name: Install the epel & remi repo
+  package:
+    name: 
+      - epel-release
+      - "https://rpms.remirepo.net/enterprise/remi-release-7.rpm"
+    state: latest
+- name: Update
+  yum:
+    update_cache: yes
+
+- name: Install php
+  package:
+    name:
+      - php
+      - php-cli
+      - php-fpm
+      - php-mysqlnd
+      - php-zip
+      - php-devel
+      - php-gd
+      - php-mcrypt
+      - php-mbstring
+      - php-curl
+      - php-xml
+      - php-pear
+      - php-bcmath
+      - php-json
+    enablerepo: "remi-php74"
+    state: present
+  become: yes
+
+- name: Config php fpm user
+  lineinfile:
+    dest: /etc/php-fpm.d/www.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^user =', line: 'user = {{ ansible_user }}' }
+    - { regexp: '^group =', line: 'group = {{ ansible_user }}' }
+    - { regexp: '^listen.owner =', line: 'listen.owner = {{ ansible_user }}' }
+    - { regexp: '^listen.group =', line: 'listen.group = {{ ansible_user }}' }
+
+- name: Config php.ini
+  lineinfile:
+    dest: /etc/php.ini
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^upload_max_filesize', line: 'upload_max_filesize = 32M' }
+    - { regexp: '^post_max_size', line: 'post_max_size = 48M' }
+    - { regexp: '^memory_limit', line: 'memory_limit = 256M' }
+    - { regexp: '^max_execution_time', line: 'max_execution_time = 600' }
+    - { regexp: '^max_input_vars', line: 'max_input_vars = 3000' }
+    - { regexp: '^max_input_time', line: 'max_input_time = 1000' }
+  notify:
+    - restart php-fpm
+# - name: Add site config
+#   template: src=../../nginx/templates/nginx-wp-common.conf dest=/etc/nginx/nginx-wp-common.conf owner=www-data group=www-data mode=0644
+#   notify:
+#     - restart nginx
+#   become: yes
