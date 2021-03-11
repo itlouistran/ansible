@@ -1,4 +1,7 @@
 ---
+- name: Update
+  yum:
+    update_cache: yes
 - name: Enable amazon-linux-extras nginx
   shell: "amazon-linux-extras enable nginx1"
 
@@ -36,7 +39,7 @@
         state: latest
       with_items:
         - python3-pip
-        - apache2-utils # password file creation tool for basic auth
+        - httpd-tools # password file creation tool for basic auth
 
     - name: Install passlib python package
       pip:

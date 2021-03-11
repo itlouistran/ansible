@@ -1,6 +1,6 @@
 ---
-- name: Restart docker
+- name: Restart mysql
   service: 
-    name: docker
+    name: mysql
     state: restarted
   become: yes

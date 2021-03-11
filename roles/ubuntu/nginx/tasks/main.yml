@@ -1,21 +1,25 @@
 ---
 - name: Update
+  become: true
   apt:
     force_apt_get: yes
     update_cache: yes
-- name: Add Nginx GPG key
-  apt_key:
-    id: ABF5BD827BD9BF62
-    keyserver: keyserver.ubuntu.com
-    state: present
-- name: Add binary package Nginx apt repository
-  apt_repository:
-    repo: deb https://nginx.org/packages/ubuntu/ {{ ansible_lsb.codename }} nginx
-    update_cache: true
-- name: Add source package Nginx apt repository
-  apt_repository:
-    repo: deb-src https://nginx.org/packages/ubuntu/ {{ ansible_lsb.codename }} nginx
-    update_cache: true
+# - name: Add Nginx GPG key
+#   become: true
+#   apt_key:
+#     id: ABF5BD827BD9BF62
+#     keyserver: keyserver.ubuntu.com
+#     state: present
+# - name: Add binary package Nginx apt repository
+#   become: true
+#   apt_repository:
+#     repo: deb https://nginx.org/packages/ubuntu/ {{ ansible_lsb.codename }} nginx
+#     update_cache: true
+# - name: Add source package Nginx apt repository
+#   become: true
+#   apt_repository:
+#     repo: deb-src https://nginx.org/packages/ubuntu/ {{ ansible_lsb.codename }} nginx
+#     update_cache: true
 - name: Install the latest version of Nginx
   package:
     name: "{{ item }}"
@@ -45,14 +49,11 @@
         name: "{{ item }}"
         state: latest
       with_items:
-        - python-pip
         - apache2-utils # password file creation tool for basic auth
-        # - pkg_resources
-
     - name: Install passlib python package
       pip:
         name: passlib
-
+        state: present
     - name: Nginx basic auth password
       htpasswd:
         path: /etc/apache2/.htpasswd

@@ -1,0 +1,13 @@
+---
+- name: Update
+  yum:
+    update_cache: yes
+- name: Install the epel & remi repo
+  package:
+    name: 
+      - amazon-linux-extras
+      - git
+    state: latest
+- name: install epel
+  become: true
+  shell: 'amazon-linux-extras install epel -y'

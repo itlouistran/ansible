@@ -1,0 +1,25 @@
+---
+- name: Update
+  apt:
+    force_apt_get: yes
+    update_cache: yes
+- name: Install the latest version of postgresql
+  package:
+    name:
+      - postgresql
+      - postgresql-contrib
+      - python3-pip
+      - libpq-dev
+    state: latest
+- name: Install the psycopg2 through pip
+  pip:
+    name:
+      - psycopg2
+    state: forcereinstall
+- name: Create database user
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    name: "{{ postgresql_user }}"
+    password: "{{ postgresql_password }}"
+    role_attr_flags: "CREATEDB"

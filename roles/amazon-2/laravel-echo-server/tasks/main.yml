@@ -1,0 +1,5 @@
+---
+- name: Install "laravel echo server" node.js package globally.
+  npm:
+    name: laravel-echo-server
+    global: yes

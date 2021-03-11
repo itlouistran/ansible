@@ -1,4 +1,7 @@
 ---
+- name: Update
+  yum:
+    update_cache: yes
 - name: Enable amazon-linux-extras php7.4
   shell: "amazon-linux-extras enable php7.4"
 
@@ -37,7 +40,8 @@
     - { regexp: '^group =', line: 'group = {{ ansible_user }}' }
     - { regexp: '^listen.owner =', line: 'listen.owner = {{ ansible_user }}' }
     - { regexp: '^listen.group =', line: 'listen.group = {{ ansible_user }}' }
-
+    - { regexp: '^listen.mode =', line: 'listen.mode = 0664' }
+    - { regexp: '^listen.acl_users =*', line: 'listen.acl_users ={{ ansible_user }}' }
 - name: Config php.ini
   lineinfile:
     dest: /etc/php.ini

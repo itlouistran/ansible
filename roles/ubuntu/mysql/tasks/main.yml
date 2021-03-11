@@ -1,0 +1,30 @@
+---
+- name: Update
+  apt:
+    force_apt_get: yes
+    update_cache: yes
+- name: Install the latest version of mysql
+  package:
+    name:
+      - mysql-server
+      - python3-pip
+    state: latest
+- name: Install the ConfigParser through pip
+  pip:
+    name:
+      - configparser
+    executable: pip3
+    state: forcereinstall
+- name: Install the PyMySQL through pip
+  pip:
+    name:
+      - PyMySQL
+    executable: pip3
+    state: forcereinstall
+- name: Create database user
+  mysql_user:
+    name: "{{ mysql_user }}"
+    password: "{{ mysql_password }}"
+    priv: '*.*:ALL'
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock

@@ -1,0 +1,8 @@
+---
+- name: Update shared conf
+  block:
+    - name: Update shared conf
+      copy:
+        src: "{{ shared_path }}"
+        dest: /home/ec2-user/projects/bizon/shared
+  when: shared_path is defined

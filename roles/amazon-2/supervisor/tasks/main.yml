@@ -1,0 +1,33 @@
+---
+- name: Update
+  yum:
+    update_cache: yes
+- name: Install the supervisord
+  package:
+    name:
+      - supervisor
+    state: present
+- name: Update supervisor config
+  lineinfile:
+    dest: /etc/supervisord.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^files = supervisord.d/*.ini ', line: 'files = supervisord.d/*.conf' }
+- name: Update supervisor conf
+  block:
+    - name: Update supervisor conf
+      copy:
+        src: "{{ supervisor_conf_path }}"
+        dest: /etc/supervisord.d
+      notify: Restart supervisor
+  when: supervisor_conf_path is defined
+- name: Start supervisor
+  service: 
+    name: supervisord
+    state: restarted
+  become: yes
+
+- name: Restart laravel-echo-server
+  become: true
+  shell: 'supervisorctl start all'
